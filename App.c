@@ -26,49 +26,40 @@ int main(void)
 	MotorDC_Init(MOT_1);
 	MotorDC_Init(MOT_2);
 	
-// 	MotorDC_Speed_HwPWM(70);
-// 	
 	while(1){
 		
-		
-		ultrasonic_DistanceInLeds();
+		/*Calulating the distance*/
 		distance = ultraSonic_CalcDistance();
+		/*If the distance is updated or not*/
 		if (distance!=-1)
 		{
 			
+			/*In case the distance is smaller than 15 cm it will be viewed on the 4 Leds*/
 			if(distance<=15){
+				/*Show the distance in 4 leds*/
 				gpioPinWrite(GPIOB,BIT4|BIT5|BIT6|BIT7,distance<<4);
+				
+				/*In case the distance is less than or equal 5 cm the car will stop*/
 				if(distance<=5){
 					MotorDC_Dir(MOT_1,STOP);
 					MotorDC_Dir(MOT_2,STOP);
 				}
+				/*In case the distance is greater than 5 cm the car will move in duty cycle 30%*/
 				else{
 					MotorDC_Dir(MOT_1,FORWARD);
 					MotorDC_Dir(MOT_2,FORWARD);
+					/*The car moves with 30 % duty cycle by the hardware pwm (phase correct pwm)*/
 					MotorDC_Speed_HwPWM(30);
 				}
-				//Led_On(LED_0);
 			}
+			/*In case the distance is greater than 15 cm the 4 Leds will be on*/
 			else{
 				gpioPinWrite(GPIOB,BIT4|BIT5|BIT6|BIT7,15<<4);
-				//Led_On(LED_1);
 			}
 		}
+		/*Delay 70 ms between every distance measure*/
 		timer2DelayMs(70);		
-		/*distance = ultraSonic_CalcDistance();
-		if(distance != -1){
-			if(distance<=5){
-				MotorDC_Dir(MOT_1,STOP);
-				MotorDC_Dir(MOT_2,STOP);
-			}
-			else{
-				MotorDC_Dir(MOT_1,FORWARD);
-				MotorDC_Dir(MOT_2,FORWARD);
-				MotorDC_Speed_HwPWM(30);
-			}
-		}
 		
-		timer2DelayMs(70);*/
 	}
 }
 void ultrasonic_DistanceInLeds(void){
@@ -79,11 +70,9 @@ void ultrasonic_DistanceInLeds(void){
 		
 		if(distance<=15){
 			gpioPinWrite(GPIOB,BIT4|BIT5|BIT6|BIT7,distance<<4);
-			//Led_On(LED_0);
 		}
 		else{
 			gpioPinWrite(GPIOB,BIT4|BIT5|BIT6|BIT7,15<<4);
-			//Led_On(LED_1);
 		}
 	}
 	timer2DelayMs(70);
