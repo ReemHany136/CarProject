@@ -36,6 +36,7 @@
 #define TOV_T2					6
 #define OCF2_T2					7
 
+#define F_CPU					16000000.0
 #define _8_BIT_RESOLUTION		256
 #define _16_BIT_RESOLUTION		65536
 #define _PWM_RESOLUTION			100.0
@@ -71,7 +72,7 @@ typedef enum timer0_Frequency_Levels{
 
 // for timer 1
 typedef enum En_timer1Mode_t{
-	T1_NORMAL_MODE=0x0000,T1_COMP_MODE_OCR1A_TOP=0x0008, T1_COMP_MODE_ICR1_TOP = 0x0018
+	T1_NORMAL_MODE=0x0000,T1_COMP_MODE_OCR1A_TOP=0x0008, T1_COMP_MODE_ICR1_TOP = 0x0018, T1_FAST_PWM_10BIT=0x0308, T1_PHASE_CORRECT_PWM = 0X0210
 
 }En_timer1Mode_t;
 typedef enum En_timer1OC_t{

@@ -4,7 +4,7 @@
 #include "timers.h"
 #include "led.h"
 
-#define F_CPU 16000000.0
+
 
 
 static En_timer0Mode_t			mode_T0;
@@ -92,9 +92,9 @@ void timer0Init(En_timer0Mode_t en_mode , En_timer0OC_t en_OC0,
 		EN_GLOBAL_INT;
 		
 	}
-	else{
+	/*else{
 		DIS_GLOBAL_INT;
-	}
+	}*/
 	
 	OCR0   = u8_outputCompare;
 	timer0Set(u8_initialValue);
@@ -163,7 +163,7 @@ void timer0DelayMs(uint16_t u16_delay_in_ms){
 	/*Updating timer1 registers values to suit the delay*/
 	TCCR0=0;
 	prescale_mask_T0=T0_PRESCALER_64;
-	TCCR0|=T0_COMP_MODE|T0_OC0_CLEAR;
+	TCCR0|=T0_COMP_MODE|T0_OC0_DIS;
 	TIMSK|=T0_POLLING;
 	OCR0 =250;
 	
@@ -188,7 +188,7 @@ void timer0DelayMs(uint16_t u16_delay_in_ms){
 void timer0DelayUs(uint32_t u32_delay_in_us){
 	uint32_t i;		
 	/*Re-initialize timer0 to be suitable for the delay*/	
-	timer0Init(T0_COMP_MODE,T0_OC0_CLEAR,T0_PRESCALER_NO,0,16,T0_POLLING);	
+	timer0Init(T0_COMP_MODE,T0_OC0_DIS,T0_PRESCALER_NO,0,16,T0_POLLING);	
 	
 	/*Delay steps using polling*/
 	timer0Start();
@@ -277,16 +277,16 @@ void timer1Init(En_timer1Mode_t en_mode,En_timer1OC_t en_OC,
 				En_timer1perscaler_t en_prescal, uint16_t u16_initialValue, 
 				uint16_t u16_outputCompareA, uint16_t u16_outputCompareB,uint16_t u16_inputCapture, En_timer1Interrupt_t en_interruptMask){
 	/*Initializing timer1 registers*/
-	TCCR1=0;
+	//TCCR1=0;
 	TCCR1 |= en_mode|en_OC;
 	TIMSK |= en_interruptMask;
 	/*Check whether it's in the interrupt mode and set the global interrupt*/
 	if(en_interruptMask == T1_INTERRUPT_NORMAL||en_interruptMask == T1_INTERRUPT_CMP_1A||en_interruptMask ==T1_INTERRUPT_ICAPTURE||en_interruptMask == T0_INTERRUPT_CMP_1B){
 		EN_GLOBAL_INT;
 	}
-	else{
+	/*else{
 		DIS_GLOBAL_INT;
-	}
+	}*/
 	
 	OCR1A   = u16_outputCompareA;
 	OCR1B	= u16_outputCompareB;
@@ -355,7 +355,7 @@ void timer1DelayMs(uint16_t u16_delay_in_ms){
 	/*Updating Timer1 registers to suits the delay*/
 	TCCR1=0;
 	prescale_mask_T1=T1_PRESCALER_64;
-	TCCR1|=T1_COMP_MODE_OCR1A_TOP|T1_OC1A_CLEAR;
+	TCCR1|=T1_COMP_MODE_OCR1A_TOP|T1_OC1_DIS;
 	TIMSK|=T1_POLLING;
 	OCR1A =250;
 	
@@ -385,7 +385,7 @@ void timer1DelayUs(uint32_t u32_delay_in_us){
 	/*Updating Timer1 registers to suits the delay*/
 	TCCR1=0;
 	prescale_mask_T1=T1_PRESCALER_NO;
-	TCCR1|=T1_COMP_MODE_OCR1A_TOP|T1_OC1A_CLEAR;
+	TCCR1|=T1_COMP_MODE_OCR1A_TOP|T1_OC1_DIS;
 	TIMSK|=T1_POLLING;
 	OCR1A =16;
 	
@@ -488,9 +488,9 @@ void timer2Init(En_timer2Mode_t en_mode,En_timer2OC_t en_OC,En_timer2perscaler_t
 	if(en_interruptMask == T2_INTERRUPT_NORMAL||en_interruptMask == T2_INTERRUPT_CMP){
 		EN_GLOBAL_INT;
 	}
-	else{
+	/*else{
 		DIS_GLOBAL_INT;
-	}
+	}*/
 	OCR2   = u8_outputCompare;
 	timer2Set(u8_initialValue);
 	

@@ -3,7 +3,7 @@
 #include "timers.h"
 #include "dcMotorConfig.h"
 #include "dcMotor.h"
-
+#include "HwPWM.h"
 /**
  * Description: 
  * @param
@@ -18,16 +18,26 @@ void MotorDC_Init(En_motorType_t en_motor_number){
 		timer2Init(T2_NORMAL_MODE,T2_OC2_DIS,T2_PRESCALER_64,0,0,0,T2_INTERRUPT_NORMAL);
 		#endif	
 	#endif
+	
 	switch(en_motor_number){
 		case MOT_1:
+		#if SWPWM_MODE == ENABLE
 		gpioPinDirection(MOTOR_EN_1_GPIO,MOTOR_EN_1_BIT,OUTPUT);
-			
+		#else
+		gpioPinDirection(GPIOD,BIT5,OUTPUT);
+		#endif
+		
 		gpioPinDirection(MOTOR_OUT_1A_GPIO,MOTOR_OUT_1A_BIT,OUTPUT);
 		gpioPinDirection(MOTOR_OUT_1B_GPIO,MOTOR_OUT_1B_BIT,OUTPUT);
 		break;
 		
 		case MOT_2:
+		#if SWPWM_MODE == ENABLE
 		gpioPinDirection(MOTOR_EN_2_GPIO,MOTOR_EN_2_BIT,OUTPUT);
+		#else
+		gpioPinDirection(GPIOD,BIT4,OUTPUT);
+		#endif
+		
 			
 		gpioPinDirection(MOTOR_OUT_2A_GPIO,MOTOR_OUT_2A_BIT,OUTPUT);
 		gpioPinDirection(MOTOR_OUT_2B_GPIO,MOTOR_OUT_2B_BIT,OUTPUT);
@@ -86,6 +96,7 @@ void MotorDC_Dir(En_motorType_t en_motor_number, En_motorDir_t en_motor_dir){
  * @param 
  */
 void MotorDC_Speed_PollingWithT0(uint8_t u8_motor_speed){
+	
 	#if SW_PWM_TIMER == TIM_0
 	timer0SwPWM(u8_motor_speed,MOTOR_FREQ);
 	#elif SW_PWM_TIMER == TIM_1
@@ -100,4 +111,6 @@ void MotorDC_Speed_PollingWithT0(uint8_t u8_motor_speed){
  * Description: set the port value (which is PORT register)
  * @param 
  */
-void MotorDC_Speed_HwPWM(uint8_t u8_motor_speed);
+void MotorDC_Speed_HwPWM(uint8_t u8_motor_speed){
+	HwPWMSetDuty(u8_motor_speed,MOTOR_FREQ);
+}

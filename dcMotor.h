@@ -15,7 +15,7 @@
 #define ENABLE         1
 #define DISABLE        0
 
-#define SWPWM_MODE     ENABLE
+#define SWPWM_MODE     DISABLE
 
 #define	TIM_0          0
 #define	TIM_1          1
